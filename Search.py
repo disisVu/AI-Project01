@@ -1,16 +1,23 @@
-def checkValid(m, mainmap):
+def vertical_matrix(matrix):
+    matrix_temp = []
+    for i in range(0, len(matrix)):
+        matrix_temp.append(matrix[::-1][i])
+    return matrix_temp
+
+def checkValid(m,matrix):
+    matrix_temp = vertical_matrix(matrix)
     valid = ""
-    if m[0] - 1 < 0:
+    if m[0] - 1 <= 0 or matrix_temp[m[1]][m[0] - 1] != 0:
         valid += "L"
-    if m[0] + 1 > mainmap[0]:
+    if m[0] + 1 >= len(matrix[0]) - 1 or matrix_temp[m[1]][m[0] + 1] != 0:
         valid += "R"
-    if m[1] - 1 < 0:
+    if m[1] - 1 <= 0 or matrix_temp[m[1] - 1][m[0]] != 0:
         valid += "U"
-    if m[1] + 1 > mainmap[1]:
+    if m[1] + 1 >= len(matrix) - 1 or matrix_temp[m[1] + 1][m[0]] != 0:
         valid += "D"
     return valid
 
-def BFS(mainmap, start, goal):
+def BFS(start, goal,matrix):
     returnpath = []
     queue = []
     visited = []
@@ -23,7 +30,7 @@ def BFS(mainmap, start, goal):
         if m == goal:
             break
         for i in ["L", "R", "U", "D"]:
-            valid = checkValid(m,mainmap)
+            valid = checkValid(m,matrix)
             
             if i == "L" and i not in valid:
                 n = [m[0] - 1, m[1]]
@@ -47,7 +54,7 @@ def BFS(mainmap, start, goal):
                     queue.append(n)
     return returnpath
                 
-def UCS(mainmap, start, goal):
+def UCS(start, goal, matrix):
     returnpath = []
     queue = []
     visited = []
@@ -64,7 +71,7 @@ def UCS(mainmap, start, goal):
         if mq == goal:
             break
         for i in ["L", "R", "U", "D"]:
-            valid = checkValid(mq,mainmap)
+            valid = checkValid(mq,matrix)
             if i == "L" and i not in valid:
                 n = [mq[0] - 1, mq[1]]
                 gn.append(mgn + 1)
@@ -131,9 +138,14 @@ def UCS(mainmap, start, goal):
     
     
 if __name__ == "__main__":
-    mainmap = [2,3]
-    start = [0,0]
-    goal = [1,2]
-    path = UCS(mainmap,start,goal)
+    start = [1,1]
+    goal = [3,4]
+    matrix = [[0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0],
+              [0, 1, 1, 0, 0],
+              [0, 1, 0, 0, 0],
+              [0, 0, 0, 0, 0], 
+              [0, 0, 0, 0, 0]]
+    path = UCS(start,goal,matrix)
     print(path)
     
