@@ -11,6 +11,7 @@ def checkValidBFS(m, mainmap):
     return valid
 
 def BFS(mainmap, start, goal):
+    returnpath = []
     queue = []
     visited = []
     valid =""
@@ -18,7 +19,7 @@ def BFS(mainmap, start, goal):
     queue.append(start)
     while queue:
         m = queue.pop(0)
-        print(m, end = " ")
+        returnpath.append(m)
         if m == goal:
             break
         for i in ["L", "R", "U", "D"]:
@@ -44,6 +45,7 @@ def BFS(mainmap, start, goal):
                 if n not in visited:
                     visited.append(n)
                     queue.append(n)
+    return returnpath
                 
                 
         
@@ -57,4 +59,5 @@ if __name__ == "__main__":
     mainmap = [2,2]
     start = [0,0]
     goal = [2,2]
-    BFS(mainmap,start,goal)
+    path = BFS(mainmap,start,goal)
+    print(path)
