@@ -308,6 +308,17 @@ def A_star(start, goal, matrix):
                                     break
     return returnPath   
     
+def RealReturnedPath(start, goal, path):
+    pathReturn = []
+    curr = goal
+    path_temp = path[::-1]
+    for i in path_temp:
+        if curr[0] == i[0] - 1 and curr[1] == i[1] or curr[0] == i[0] + 1 and curr[1] == i[1] or curr[1] == i[1] - 1 and curr[0] == i[0]or curr[1] == i[1] + 1 and curr[0] == i[0] or curr == i:
+            curr = i
+            pathReturn.append(curr)
+    return pathReturn[::-1]
+        
+        
 if __name__ == "__main__":
     start = [1,1]
     goal = [1,5]
@@ -318,5 +329,26 @@ if __name__ == "__main__":
               [0, 0, 0, 1, 0, 0], 
               [0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0]]
-    path = A_star(start, goal, matrix)
-    print(path)
+    expandedNodeBFS = BFS(start, goal, matrix)
+    pathBFS = RealReturnedPath(start,goal,expandedNodeBFS)
+    print("BFS Expanded Node = " , expandedNodeBFS)
+    print("BFS Returned Path = " , pathBFS)
+    expandedNodeUCS = UCS(start, goal, matrix)
+    pathUCS = RealReturnedPath(start,goal,expandedNodeUCS)
+    print("\nUCS Expanded Node = " , expandedNodeUCS)
+    print("UCS Returned Path = " , pathUCS)
+    expandedNodeIDS = IDS(start, goal, matrix,4)
+    pathIDS = RealReturnedPath(start,goal,expandedNodeIDS)
+    print("\nIDS Expanded Node = " , expandedNodeIDS)
+    if len(pathIDS) > 0:
+        print("IDS Returned Path = " , pathIDS)
+    else:
+        print("Goal not found in IDS. \nAdvice: increase limit depth")
+    expandedNodeGBFS = GBFS(start, goal, matrix)
+    pathGBFS = RealReturnedPath(start,goal,expandedNodeGBFS)
+    print("\nGBFS Expanded Node = " , expandedNodeGBFS)
+    print("GBFS Returned Path = " , pathGBFS)
+    expandedNodeA_star = A_star(start, goal, matrix)
+    pathA_star = RealReturnedPath(start,goal,expandedNodeA_star)
+    print("\nA* Expanded Node = " , expandedNodeA_star)
+    print("A* Returned Path = " , pathA_star)
