@@ -1,4 +1,5 @@
 import math as m
+
 def vertical_matrix(matrix):
     matrix_temp = []
     for i in range(0, len(matrix)):
@@ -83,7 +84,7 @@ def UCS(start, goal, matrix):
                 else:
                     for i in range(len(visited) - 1):
                         if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedgn[i] > mgn + 1:
-                            for j in frontier:
+                            for j in len(frontier) - 1:
                                 if n == frontier[j]:
                                     gn[j] = mgn + 1
                                     break
@@ -98,7 +99,7 @@ def UCS(start, goal, matrix):
                 else:
                     for i in range(len(visited) - 1):
                         if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedgn[i] > mgn + 1:
-                            for j in frontier:
+                            for j in len(frontier) - 1:
                                 if n == frontier[j]:
                                     gn[j] = mgn + 1
                                     break
@@ -113,7 +114,7 @@ def UCS(start, goal, matrix):
                 else:
                     for i in range(len(visited) - 1):
                         if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedgn[i] > mgn + 1:
-                            for j in frontier:
+                            for j in len(frontier) - 1:
                                 if n == frontier[j]:
                                     gn[j] = mgn + 1
                                     break
@@ -128,7 +129,7 @@ def UCS(start, goal, matrix):
                 else:
                     for i in range(len(visited) - 1):
                         if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedgn[i] > mgn + 1:
-                            for j in frontier:
+                            for j in len(frontier) - 1:
                                 if n == frontier[j]:
                                     gn[j] = mgn + 1
                                     break
@@ -229,83 +230,104 @@ def A_star(start, goal, matrix):
     frontier = []
     visited = []
     valid =""
-    gn = 0
+    gn = [0]
     visited.append(start)
     frontier.append(start)
-    fn = [m.sqrt((goal[1] - start[1])**2 + (goal[0] - start[0])**2) + gn]
-    visitedfn = [m.sqrt((goal[1] - start[1])**2 + (goal[0] - start[0])**2) + gn]
+    fn = [m.sqrt((goal[1] - start[1])**2 + (goal[0] - start[0])**2) + gn[0]]
+    visitedfn = [m.sqrt((goal[1] - start[1])**2 + (goal[0] - start[0])**2) + gn[0]]
     while frontier:
+        print(gn)
+        print(fn)
+        print(frontier)
         index_min = fn.index(min(fn))
         fn.pop(index_min)
+        mgn = gn.pop(index_min)
         mq = frontier.pop(index_min)
         returnPath.append(mq)
         if mq == goal:
             break
         for i in ["L", "R", "U", "D"]:
             valid = checkValid(mq,matrix)
-            gn += 1
             if i == "L" and i not in valid:
                 n = [mq[0] - 1, mq[1]]
+                gn.append(mgn + 1)
                 if n not in visited:
                     visited.append(n)
                     frontier.append(n)
-                    fn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn)
+                    fn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn[-1])
+                    visitedfn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn[-1])
                 else:
                     for i in range(len(visited) - 1):
-                        if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] > (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn):
-                            for j in frontier:
+                        if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] > (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
+                            for j in len(frontier) - 1:
                                 if n == frontier[j]:
-                                    fn[j] = (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn)
+                                    fn[j] = (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1))
+                                    gn[j] = gn[-1]
+                                    gn.pop(-1)
                                     break
                                     break
+                        elif visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] <= (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
+                            gn.pop(-1)
             if i == "R" and i not in valid:
                 n = [mq[0] + 1, mq[1]]
-                
+                gn.append(mgn + 1)
                 if n not in visited:
                     visited.append(n)
                     frontier.append(n)
-                    fn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn)
-                    visitedfn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn)
+                    fn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn[-1])
+                    visitedfn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn[-1])
                 else:
                     for i in range(len(visited) - 1):
-                        if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] > (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn):
-                            for j in frontier:
+                        if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] > (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
+                            for j in len(frontier) - 1:
                                 if n == frontier[j]:
-                                    fn[j] = (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn)
+                                    fn[j] = (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1))
+                                    gn[j] = gn[-1]
+                                    gn.pop(-1)
                                     break
                                     break
+                        elif visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] <= (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
+                            gn.pop(-1)
             if i == "U" and i not in valid:
                 n = [mq[0], mq[1] - 1]
-                
+                gn.append(mgn + 1)
                 if n not in visited:
                     visited.append(n)
                     frontier.append(n)
-                    fn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn)
-                    visitedfn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn)
+                    fn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn[-1])
+                    visitedfn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn[-1])
                 else:
                     for i in range(len(visited) - 1):
-                        if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] > (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn):
-                            for j in frontier:
+                        if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] > (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
+                            for j in len(frontier) - 1:
                                 if n == frontier[j]:
-                                    fn[j] = (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn)
+                                    fn[j] = (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1))
+                                    gn[j] = gn[-1]
+                                    gn.pop(-1)
                                     break
                                     break
+                        elif visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] <= (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
+                            gn.pop(-1)
             if i == "D" and i not in valid:
                 n = [mq[0], mq[1] + 1]
-                
+                gn.append(mgn + 1)
                 if n not in visited:
                     visited.append(n)
                     frontier.append(n)
-                    fn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn)
-                    visitedfn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn)
+                    fn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn[-1])
+                    visitedfn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn[-1])
                 else:
                     for i in range(len(visited) - 1):
-                        if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] > (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn):
-                            for j in frontier:
+                        if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] > (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
+                            for j in len(frontier) - 1:
                                 if n == frontier[j]:
-                                    fn[j] = (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + gn)
+                                    fn[j] = (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1))
+                                    gn[j] = gn[-1]
+                                    gn.pop(-1)
                                     break
                                     break
+                        elif visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] <= (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
+                            gn.pop(-1) 
     return returnPath   
     
 def RealReturnedPath(start, goal, path):
