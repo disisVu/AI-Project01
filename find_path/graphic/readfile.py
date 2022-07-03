@@ -5,3 +5,5 @@ def read_file(filename):
         for line in f: # read rest of lines
             array.append([int(x) for x in line.split()])
     return cols, rows, array
+
+# References: https://stackoverflow.com/questions/6583573/how-to-read-numbers-from-file-in-python
