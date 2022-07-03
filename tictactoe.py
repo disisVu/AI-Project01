@@ -1,23 +1,3 @@
-import turtle as tt
-
-mainSCR = tt.getscreen()  
-tt.main 
-
-"""class Player(NamedTuple):
-    label: str
-    color: str
-    
-class Move(NamedTuple):
-    row: int
-    col: int
-    label: str = ""
-
-BOARD_SIZE = 3
-DEFAULT_PLAYERS = (
-    Player(label="X", color="blue"),
-    Player(label="O", color="green"),
-)
-
 def printBoard(board):
     print(board[1] + '|' + board[2] + '|' + board[3])
     print('-+-+-')
@@ -181,4 +161,4 @@ firstComputerMove = True
 
 while not checkForWin():
     compMove()
-    playerMove()"""
+    playerMove()
