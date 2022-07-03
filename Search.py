@@ -11,12 +11,12 @@ def checkValid(m,matrix):
     valid = ""
     if m[0] - 1 <= 0 or matrix_temp[m[1]][m[0] - 1] != 0:
         valid += "L"
-    if m[0] + 1 >= len(matrix[0]) - 1 or matrix_temp[m[1]][m[0] + 1] != 0:
+    if m[0] + 1 >= len(matrix[0]) or matrix_temp[m[1]][m[0] + 1] != 0:
         valid += "R"
     if m[1] - 1 <= 0 or matrix_temp[m[1] - 1][m[0]] != 0:
-        valid += "U"
-    if m[1] + 1 >= len(matrix) - 1 or matrix_temp[m[1] + 1][m[0]] != 0:
         valid += "D"
+    if m[1] + 1 >= len(matrix) or matrix_temp[m[1] + 1][m[0]] != 0:
+        valid += "U"
     return valid
 
 def BFS(start, goal,matrix):
@@ -44,12 +44,12 @@ def BFS(start, goal,matrix):
                 if n not in visited:
                     visited.append(n)
                     queue.append(n)
-            if i == "U" and i not in valid:
+            if i == "D" and i not in valid:
                 n = [m[0], m[1] - 1]
                 if n not in visited:
                     visited.append(n)
                     queue.append(n)
-            if i == "D" and i not in valid:
+            if i == "U" and i not in valid:
                 n = [m[0], m[1] + 1]
                 if n not in visited:
                     visited.append(n)
@@ -104,7 +104,7 @@ def UCS(start, goal, matrix):
                                     gn[j] = mgn + 1
                                     break
                                     break
-            if i == "U" and i not in valid:
+            if i == "D" and i not in valid:
                 n = [mq[0], mq[1] - 1]
                 gn.append(mgn + 1)
                 visitedgn.append(mgn + 1)
@@ -119,7 +119,7 @@ def UCS(start, goal, matrix):
                                     gn[j] = mgn + 1
                                     break
                                     break
-            if i == "D" and i not in valid:
+            if i == "U" and i not in valid:
                 n = [mq[0], mq[1] + 1]
                 gn.append(mgn + 1)
                 visitedgn.append(mgn + 1)
@@ -166,13 +166,13 @@ def IDS(start, goal,matrix, limit_depth):
                         visited.append(n)
                         stack.append(n)
                         depthNode.append(depth + 1)
-                if i == "U" and i not in valid:
+                if i == "D" and i not in valid:
                     n = [m[0], m[1] - 1]
                     if n not in visited:
                         visited.append(n)
                         stack.append(n)
                         depthNode.append(depth + 1)
-                if i == "D" and i not in valid:
+                if i == "U" and i not in valid:
                     n = [m[0], m[1] + 1]
                     if n not in visited:
                         visited.append(n)
@@ -211,13 +211,13 @@ def GBFS(start, goal, matrix):
                     visited.append(n)
                     frontier.append(n)
                     hn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2))
-            if i == "U" and i not in valid:
+            if i == "D" and i not in valid:
                 n = [mq[0], mq[1] - 1]
                 if n not in visited:
                     visited.append(n)
                     frontier.append(n)
                     hn.append(m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2))
-            if i == "D" and i not in valid:
+            if i == "U" and i not in valid:
                 n = [mq[0], mq[1] + 1]
                 if n not in visited:
                     visited.append(n)
@@ -236,9 +236,6 @@ def A_star(start, goal, matrix):
     fn = [m.sqrt((goal[1] - start[1])**2 + (goal[0] - start[0])**2) + gn[0]]
     visitedfn = [m.sqrt((goal[1] - start[1])**2 + (goal[0] - start[0])**2) + gn[0]]
     while frontier:
-        print(gn)
-        print(fn)
-        print(frontier)
         index_min = fn.index(min(fn))
         fn.pop(index_min)
         mgn = gn.pop(index_min)
@@ -279,7 +276,7 @@ def A_star(start, goal, matrix):
                 else:
                     for i in range(len(visited) - 1):
                         if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] > (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
-                            for j in len(frontier) - 1:
+                            for j in range(len(frontier) - 1):
                                 if n == frontier[j]:
                                     fn[j] = (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1))
                                     gn[j] = gn[-1]
@@ -288,7 +285,7 @@ def A_star(start, goal, matrix):
                                     break
                         elif visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] <= (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
                             gn.pop(-1)
-            if i == "U" and i not in valid:
+            if i == "D" and i not in valid:
                 n = [mq[0], mq[1] - 1]
                 gn.append(mgn + 1)
                 if n not in visited:
@@ -299,7 +296,7 @@ def A_star(start, goal, matrix):
                 else:
                     for i in range(len(visited) - 1):
                         if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] > (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
-                            for j in len(frontier) - 1:
+                            for j in range(len(frontier) - 1):
                                 if n == frontier[j]:
                                     fn[j] = (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1))
                                     gn[j] = gn[-1]
@@ -308,7 +305,7 @@ def A_star(start, goal, matrix):
                                     break
                         elif visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] <= (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
                             gn.pop(-1)
-            if i == "D" and i not in valid:
+            if i == "U" and i not in valid:
                 n = [mq[0], mq[1] + 1]
                 gn.append(mgn + 1)
                 if n not in visited:
@@ -319,7 +316,7 @@ def A_star(start, goal, matrix):
                 else:
                     for i in range(len(visited) - 1):
                         if visited[i][0] == n[0] and visited[i][1] == n[1] and visitedfn[i] > (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1)):
-                            for j in len(frontier) - 1:
+                            for j in range(len(frontier) - 1):
                                 if n == frontier[j]:
                                     fn[j] = (m.sqrt((goal[1] - n[1])**2 + (goal[0] - n[0])**2) + (mgn + 1))
                                     gn[j] = gn[-1]
