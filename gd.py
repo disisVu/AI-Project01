@@ -52,6 +52,12 @@ board = np.zeros( (BOARD_ROWS, BOARD_COLS) )
 # ---------
 # FUNCTIONS
 # ---------
+def vertical_matrix(matrix):
+    matrix_temp = []
+    for i in range(0, len(matrix)):
+        matrix_temp.append(matrix[::-1][i])
+    return matrix_temp
+
 def draw_lines(choose):
     if choose == 1:
         # 1 horizontal
@@ -134,24 +140,34 @@ def is_board_full():
 
 def check_win(player):
 	# vertical win check
-	for col in range(BOARD_COLS):
-		if board[0][col] == player and board[1][col] == player and board[2][col] == player:
-			draw_vertical_winning_line(col, player)
+	ver_board = np.transpose(board)
+	returnCol = 0
+	for col in ver_board:
+		if all(col == player):
+			draw_vertical_winning_line(returnCol, player)
 			return True
+		else: 
+			returnCol += 1
+		
 
 	# horizontal win check
-	for row in range(BOARD_ROWS):
-		if board[row][0] == player and board[row][1] == player and board[row][2] == player:
-			draw_horizontal_winning_line(row, player)
+	returnRow = 0
+	for row in board:
+		if all(row == player):
+			draw_horizontal_winning_line(returnRow, player)
 			return True
+		else: 
+			returnRow += 1
 
 	# asc diagonal win check
-	if board[2][0] == player and board[1][1] == player and board[0][2] == player:
+	asc = np.diag(np.flipud(board))
+	if all(asc == player):
 		draw_asc_diagonal(player)
 		return True
 
-	# desc diagonal win chek
-	if board[0][0] == player and board[1][1] == player and board[2][2] == player:
+	# desc diagonal win check
+	desc = np.diag(board)
+	if all(desc == player):
 		draw_desc_diagonal(player)
 		return True
 
@@ -164,7 +180,6 @@ def draw_vertical_winning_line(col, player):
 		color = CIRCLE_COLOR
 	elif player == 2:
 		color = CROSS_COLOR
-
 	pygame.draw.line( screen, color, (posX, 15), (posX, HEIGHT - 15), LINE_WIDTH )
 
 def draw_horizontal_winning_line(row, player):
