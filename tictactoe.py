@@ -2,6 +2,7 @@
 import pygame, sys
 import numpy as np
 import random
+from math import inf
 
 # initializes pygame
 pygame.init()
@@ -107,21 +108,21 @@ def drawXO():
                 pygame.draw.line( screen, CROSS_COLOR, (col * SQUARE_SIZE + SPACE, row * SQUARE_SIZE + SPACE), (col * SQUARE_SIZE + SQUARE_SIZE - SPACE, row * SQUARE_SIZE + SQUARE_SIZE - SPACE), CROSS_WIDTH )
                 
 def chooseMatrixGraphic():
-	#borders
-	pygame.draw.rect(screen, WHITE, (WIDTH / (WIDTH / 100), HEIGHT / 7 + HEIGHT / 14, WIDTH - (WIDTH / (WIDTH / 100)) * 2, HEIGHT / 7))
-	pygame.draw.rect(screen, WHITE, (WIDTH / (WIDTH / 100), ((HEIGHT / 7) *3  + HEIGHT / 14), WIDTH - (WIDTH / (WIDTH / 100)) * 2, HEIGHT / 7))
-	pygame.draw.rect(screen, WHITE, (WIDTH / (WIDTH / 100), ((HEIGHT / 7) *5 + HEIGHT / 14), WIDTH - (WIDTH / (WIDTH / 100)) * 2, HEIGHT / 7))
+    #borders
+    pygame.draw.rect(screen, WHITE, (WIDTH / (WIDTH / 100), HEIGHT / 7 + HEIGHT / 14, WIDTH - (WIDTH / (WIDTH / 100)) * 2, HEIGHT / 7))
+    pygame.draw.rect(screen, WHITE, (WIDTH / (WIDTH / 100), ((HEIGHT / 7) *3  + HEIGHT / 14), WIDTH - (WIDTH / (WIDTH / 100)) * 2, HEIGHT / 7))
+    pygame.draw.rect(screen, WHITE, (WIDTH / (WIDTH / 100), ((HEIGHT / 7) *5 + HEIGHT / 14), WIDTH - (WIDTH / (WIDTH / 100)) * 2, HEIGHT / 7))
  
-	#text
-	font = pygame.font.SysFont('cambria', 40)
-	text1 = font.render('CHOOSE MATRIX TYPE', True, WHITE)
-	text2 = font.render('3x3', True, BLACK)
-	text3 = font.render('5x5', True, BLACK)
-	text4 = font.render('7x7', True, BLACK)
-	screen.blit(text1, (WIDTH / 2 - WIDTH / 3.5, HEIGHT / 14))
-	screen.blit(text2, (WIDTH / 2 - WIDTH / 24, HEIGHT / 7 + HEIGHT / 14 + HEIGHT / 28))
-	screen.blit(text3, (WIDTH / 2 - WIDTH / 24, (HEIGHT / 7) *3  + HEIGHT / 14 + HEIGHT / 28))
-	screen.blit(text4, (WIDTH / 2 - WIDTH / 24, (HEIGHT / 7) *5 + HEIGHT / 14 + HEIGHT / 28))
+    #text
+    font = pygame.font.SysFont('cambria', 40)
+    text1 = font.render('CHOOSE MATRIX TYPE', True, WHITE)
+    text2 = font.render('3x3', True, BLACK)
+    text3 = font.render('5x5', True, BLACK)
+    text4 = font.render('7x7', True, BLACK)
+    screen.blit(text1, (WIDTH / 2 - WIDTH / 3.5, HEIGHT / 14))
+    screen.blit(text2, (WIDTH / 2 - WIDTH / 24, HEIGHT / 7 + HEIGHT / 14 + HEIGHT / 28))
+    screen.blit(text3, (WIDTH / 2 - WIDTH / 24, (HEIGHT / 7) *3  + HEIGHT / 14 + HEIGHT / 28))
+    screen.blit(text4, (WIDTH / 2 - WIDTH / 24, (HEIGHT / 7) *5 + HEIGHT / 14 + HEIGHT / 28))
  
 def choiceOption(choose):
     chooseMatrixGraphic()
@@ -145,56 +146,61 @@ def choiceOption(choose):
     return choose
 
 def drawVerticalLine(col, player):
-	posX = col * SQUARE_SIZE + SQUARE_SIZE//2
+    posX = col * SQUARE_SIZE + SQUARE_SIZE//2
 
-	if player == 1:
-		color = CIRCLE_COLOR
-	elif player == 2:
-		color = CROSS_COLOR
-	pygame.draw.line( screen, color, (posX, 15), (posX, HEIGHT - 15), LINE_WIDTH )
+    if player == 1:
+        color = CIRCLE_COLOR
+    elif player == 2:
+        color = CROSS_COLOR
+    pygame.draw.line( screen, color, (posX, 15), (posX, HEIGHT - 15), LINE_WIDTH )
 
 def drawHorizontalLine(row, player):
-	posY = row * SQUARE_SIZE + SQUARE_SIZE//2
+    posY = row * SQUARE_SIZE + SQUARE_SIZE//2
 
-	if player == 1:
-		color = CIRCLE_COLOR
-	elif player == 2:
-		color = CROSS_COLOR
-	pygame.draw.line( screen, color, (15, posY), (WIDTH - 15, posY), WIN_LINE_WIDTH )
+    if player == 1:
+        color = CIRCLE_COLOR
+    elif player == 2:
+        color = CROSS_COLOR
+    pygame.draw.line( screen, color, (15, posY), (WIDTH - 15, posY), WIN_LINE_WIDTH )
 
 def drawAscDiagonalLine(player):
-	if player == 1:
-		color = CIRCLE_COLOR
-	elif player == 2:
-		color = CROSS_COLOR
-	pygame.draw.line( screen, color, (15, HEIGHT - 15), (WIDTH - 15, 15), WIN_LINE_WIDTH )
+    if player == 1:
+        color = CIRCLE_COLOR
+    elif player == 2:
+        color = CROSS_COLOR
+    pygame.draw.line( screen, color, (15, HEIGHT - 15), (WIDTH - 15, 15), WIN_LINE_WIDTH )
 
 def drawDescDiagonalLine(player):
-	if player == 1:
-		color = CIRCLE_COLOR
-	elif player == 2:
-		color = CROSS_COLOR
-	pygame.draw.line( screen, color, (15, 15), (WIDTH - 15, HEIGHT - 15), WIN_LINE_WIDTH )
- 
-def printResult (check, player):
     if player == 1:
-        plr = 'O'
+        color = CIRCLE_COLOR
+    elif player == 2:
+        color = CROSS_COLOR
+    pygame.draw.line( screen, color, (15, 15), (WIDTH - 15, HEIGHT - 15), WIN_LINE_WIDTH )
+    
+def drawLine(board, player):
+    pos,cell = checkWinPos(board, player)
+    if pos == 1:
+        drawVerticalLine(cell,player)
+    elif pos == 2:
+        drawHorizontalLine(cell,player)
+    elif pos == 3:
+        drawAscDiagonalLine(player)
     else:
-        plr = 'X'
-    font = pygame.font.SysFont('cambria', 60)
-    if check == 1:
-        win = font.render(plr + ' WIN', True, RED, BLACK)
-        screen.blit(win, (WIDTH / 2 - 60, HEIGHT / 2 - 60))
-    elif check == -1:
-        draw = font.render("DRAW", True, RED, BLACK)
-        screen.blit(draw, (WIDTH / 2 - 60, HEIGHT / 2 - 60))
+        drawDescDiagonalLine(player)
         
+def displayText(txt):
+    font = pygame.font.SysFont('cambria', 60)
+    text = font.render(txt, True, RED, BLACK)
+    text_rect = text.get_rect(center=(WIDTH//2,HEIGHT//2))
+    screen.blit(text, text_rect)
+         
 def reStart():
-	screen.fill( BG_COLOR )
-	drawMatrix(choose)
-	for row in range(BOARD_ROWS):
-		for col in range(BOARD_COLS):
-			board[row][col] = 0
+    screen.fill( BG_COLOR )
+    drawMatrix(choose)
+    for row in range(BOARD_ROWS):
+        for col in range(BOARD_COLS):
+            board[row][col] = 0
+    pygame.display.update()
 # -------------------
 # UTILITY FUNCTIONS
 # -------------------
@@ -214,66 +220,128 @@ def boardRC(choose):
     return BOARD_ROWS, BOARD_COLS, SQUARE_SIZE
 
 def availableMove(row, col):
-	return board[row][col] == 0
+    return board[row][col] == 0
 
 def isBoardFull():
-	for row in range(BOARD_ROWS):
-		for col in range(BOARD_COLS):
-			if board[row][col] == 0:
-				return False
-	return True
+    for row in range(BOARD_ROWS):
+        for col in range(BOARD_COLS):
+            if board[row][col] == 0:
+                return False
+    return True
 
-def checkWin(player):
-	# vertical win check
-	ver_board = np.transpose(board)
-	returnCol = 0
-	for col in ver_board:
-		if all(col == player):
-			drawVerticalLine(returnCol, player)
-			printResult(1,player)
-			return 1
-		else: 
-			returnCol += 1
-		
+def checkWin(board, player):
+    # vertical win check
+    ver_board = np.transpose(board)
+    returnCol = 0
+    for col in ver_board:
+        if all(col == player):
+            return 1
+        else: 
+            returnCol += 1
+        
 
-	# horizontal win check
-	returnRow = 0
-	for row in board:
-		if all(row == player):
-			drawHorizontalLine(returnRow, player)
-			printResult(1,player)
-			return 1
-		else: 
-			returnRow += 1
+    # horizontal win check
+    returnRow = 0
+    for row in board:
+        if all(row == player):
+            return 1
+        else: 
+            returnRow += 1
 
-	# asc diagonal win check
-	asc = np.diag(np.flipud(board))
-	if all(asc == player):
-		drawAscDiagonalLine(player)
-		printResult(1,player)
-		return 1
+    # asc diagonal win check
+    asc = np.diag(np.flipud(board))
+    if all(asc == player):
+        return 1
 
-	# desc diagonal win check
-	desc = np.diag(board)
-	if all(desc == player):
-		drawDescDiagonalLine(player)
-		printResult(1,player)
-		return 1
+    # desc diagonal win check
+    desc = np.diag(board)
+    if all(desc == player):
+        return 1
+    return 0
+def checkWinPos(board, player):
+    # vertical win check
+    ver_board = np.transpose(board)
+    returnCol = 0
+    for col in ver_board:
+        if all(col == player):
+            return 1,returnCol
+        else: 
+            returnCol += 1
+        
 
-	#draw
-	if isBoardFull():
-		printResult(-1,player)
-		return -1
+    # horizontal win check
+    returnRow = 0
+    for row in board:
+        if all(row == player):
+            return 2,returnRow
+        else: 
+            returnRow += 1
 
-	return 0
+    # asc diagonal win check
+    asc = np.diag(np.flipud(board))
+    if all(asc == player):
+        return 3,0
 
+    # desc diagonal win check
+    desc = np.diag(board)
+    if all(desc == player):
+        return 4,0
+def gameOver(board):
+    return checkWin(board, 1) or checkWin(board, 2) or isBoardFull()
+
+def result(board):
+
+    if checkWin(board, 2):
+        return 1
+    elif checkWin(board, 1):
+        return -1
+    elif checkWin(board, 1) == 0 and checkWin(board, 2) == 0 and isBoardFull() == 1:
+        return 0
+
+def emptyCells(board):
+
+    cells = []
+
+    for row in range(BOARD_ROWS):
+        for col in range(BOARD_COLS):
+            if board[row][col] == 0:
+                cells.append([row, col])
+
+    return cells
+
+def minimax(board, depth, player):
+
+    if player == 2:
+        best = [-1, -1, -inf]
+    else:
+        best = [-1, -1, inf]
+
+    if gameOver(board) or depth == 0:
+        score = result(board)
+        return [-1, -1, score]
+
+    for cell in emptyCells(board):
+        row, col = cell
+        board[row][col] = player
+        score = minimax(board, depth - 1, player % 2 + 1)
+        board[row][col] = 0
+        score[0], score[1] = row, col
+
+
+        if player == 2:
+            if score[2] > best[2]:
+                best = score # max value
+
+        else:
+            if score[2] < best[2]:
+                best = score # min value
+
+    return best
 # ----------
 # VARIABLES
 # ----------
 
 player = 1
-game_over = False
-rowB, colB = 0, 0
 
 # ------------
 # CHOICE MENU
@@ -296,39 +364,41 @@ pygame.display.update()
 # ---------
 
 while True:
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			sys.exit()
-		if player == 2:
-		##Bot turn-----------
-			while not availableMove( rowB, colB ) and not game_over:
-				rowB, colB = random.randint(0, BOARD_COLS - 1), random.randint(0, BOARD_COLS - 1)
-			board[rowB][colB] = player
-		##----------------------
-			if checkWin( player ) == 1 or checkWin( player ) == -1:
-					game_over = True		
-			player = player % 2 + 1
-			drawXO()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r:
+                reStart()
+                player = 1
+        if gameOver(board):
+            if result(board) == 1:
+                drawLine(board, 2)
+                displayText("  BOT win!")
+            elif result(board) == -1:
+                drawLine(board, 1)
+                displayText("  You won!  ")
+            else:
+                displayText("  Its a draw  ")
+            pygame.display.update()
+               
+    
+        if event.type ==  pygame.MOUSEBUTTONDOWN:
+            mouseX = event.pos[0] # x
+            mouseY = event.pos[1] # y
+
+            row = int(mouseY // SQUARE_SIZE)
+            col = int(mouseX // SQUARE_SIZE)
    
-		if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
-
-			mouseX = event.pos[0] # x
-			mouseY = event.pos[1] # y
-
-			clicked_row = int(mouseY // SQUARE_SIZE)
-			clicked_col = int(mouseX // SQUARE_SIZE)
-			if availableMove( clicked_row, clicked_col ):
-				board[clicked_row][clicked_col] = player
-				if checkWin( player ) == 1 or checkWin( player ) == -1:
-					game_over = True		
-				player = player % 2 + 1
-
-			drawXO()
-
-		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_r:
-				reStart()
-				player = 1
-				game_over = False
-
-	pygame.display.update()
+            if availableMove( row, col ):
+                board[row][col] = 1
+                drawXO()
+                pygame.display.update()
+                if gameOver(board) != 1:
+                    depth = len(emptyCells(board))
+                    botMove = minimax(board, depth, 2)
+                    row, col = botMove[0],  botMove[1]
+                    board[row][col] = 2
+                    drawXO()
+                    pygame.display.update()
+    
