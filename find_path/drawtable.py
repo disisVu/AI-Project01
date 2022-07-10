@@ -32,11 +32,13 @@ blue4 = '#005b96'
 
 color = [red1, red2, yellow1, yellow2, green1, green2, blue3, blue4]
 
+# Search algorithm label
+search_label = ['Breadth-first Search', 'Uniform-cost Search', 'Iterative Deepening Search', 'Greedy Best-first Search', 'A* Search']
+
 # Init turtle
 t = turtle.Turtle()
 
 # Remember turtle angle & position
-# References: https://stackoverflow.com/questions/19126254/how-to-make-turtle-remember-its-position-in-l-systems
 def get_turtle_state(turtle):
     # Return turtle's current heading and position.
     return turtle.heading(), turtle.position()
@@ -224,6 +226,7 @@ def draw_table(cols, rows, array, option, depth):
             write_cell(path[i][0], path[i][1], '+', int(font_size * 1.2), 'black')
 
     # Result information
+    write_cell(0, rows + 2.6, search_label[option - 1], int(font_size * 1.1), 'black')
     write_cell(0, rows + 1.8, 'Cost of expanded nodes: ' + str(len(expanded_nodes)), int(font_size * 1.1), 'black')
     write_cell(0, rows + 1, 'Cost of final path: ' + str(len(path)), int(font_size * 1.1), 'black')
 

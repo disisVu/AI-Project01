@@ -27,5 +27,3 @@ def draw_edge(mat, y0, x0, y1, x1, value, inplace=False):
     mat[x, y] = value + 1
     if not inplace:
         return mat if not transpose else mat.T
-
-# Reference: https://stackoverflow.com/questions/50387606/python-draw-line-between-two-coordinates-in-a-matrix
